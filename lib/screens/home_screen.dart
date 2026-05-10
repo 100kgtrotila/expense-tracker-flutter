@@ -1,4 +1,5 @@
 import 'package:expense_tracker/screens/category_details_screen.dart';
+import 'package:expense_tracker/widgets/sort_button.dart';
 import 'package:flutter/material.dart';
 import '../models/expense.dart';
 import '../models/category.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Expense> _expenses = [];
+  SortType _sortType = SortType.dateDesc;
 
   void _addNewExpense(String title, double amount, ExpenseCategory category) {
     final newExpense = Expense(
@@ -50,6 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
         .fold(0.0, (sum, e) => sum + e.amount);
   }
 
+  List<Expense> _getSortedExpenses() {
+    final list = List<Expense>.from(_expenses);
+
+    switch (_sortType) {
+      case SortType.dateDesc:
+        list.sort((a, b) => b.date.compareTo(a.date));
+        break;
+      case SortType.dateAsc:
+        list.sort((a, b) => a.date.compareTo(b.date));
+        break;
+      case SortType.amountDesc:
+        list.sort((a, b) => b.amount.compareTo(a.amount));
+        break;
+      case SortType.amountAsc:
+        list.sort((a, b) => a.amount.compareTo(b.amount));
+        break;
+    }
+
+    return list;
+  }
+
   void _startAddNewExpense() {
     showDialog(
       context: context,
@@ -72,6 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('My Expenses'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          SortButton(
+            currentSort: _sortType,
+            onSortChanged: (newSort) => setState(() => _sortType = newSort),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -117,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Expanded(
             child: TransactionList(
-              expenses: _expenses,
+              expenses: _getSortedExpenses(),
               onDelete: _deleteExpense,
             ),
           ),

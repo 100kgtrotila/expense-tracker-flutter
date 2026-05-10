@@ -33,7 +33,7 @@ class CategoryCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '\$${totalAmount.toStringAsFixed(2)}',
+                '₴${totalAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: category.color,

@@ -26,10 +26,20 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
     final title = _titleController.text.trim();
     final amountText = _amountController.text.trim();
 
-    if (title.isEmpty || amountText.isEmpty) return;
+    if (title.isEmpty || amountText.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
 
     final amount = double.tryParse(amountText);
-    if (amount == null || amount <= 0) return;
+    if (amount == null || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid positive amount')),
+      );
+      return;
+    }
 
     widget.onAdd(title, amount, _selectedCategory);
     Navigator.pop(context);
@@ -58,7 +68,6 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
           const SizedBox(height: 16),
           DropdownButtonFormField<ExpenseCategory>(
             decoration: const InputDecoration(labelText: 'Category'),
-            value: _selectedCategory,
             items: ExpenseCategory.values.map((category) {
               return DropdownMenuItem(
                 value: category,

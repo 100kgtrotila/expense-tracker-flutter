@@ -50,10 +50,19 @@ class _HomeScreenState extends State<HomeScreen> {
         .fold(0.0, (sum, e) => sum + e.amount);
   }
 
-  void _startAddNewExpense(BuildContext context) {
+  void _startAddNewExpense() {
     showDialog(
       context: context,
       builder: (ctx) => AddExpenseDialog(onAdd: _addNewExpense),
+    );
+  }
+
+  void _navigateToCategoryDetails(ExpenseCategory category) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) =>
+            CategoryDetailsScreen(category: category, expenses: _expenses),
+      ),
     );
   }
 
@@ -94,16 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return CategoryCard(
                 category: cat,
                 totalAmount: _getCategoryTotal(cat),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CategoryDetailsScreen(
-                        category: cat,
-                        expenses: _expenses,
-                      ),
-                    ),
-                  );
-                },
+                onTap: () => _navigateToCategoryDetails(cat),
               );
             },
           ),
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _startAddNewExpense(context),
+        onPressed: _startAddNewExpense,
         child: const Icon(Icons.add),
       ),
     );

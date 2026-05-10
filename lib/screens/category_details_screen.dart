@@ -12,13 +12,10 @@ class CategoryDetailsScreen extends StatelessWidget {
     required this.expenses,
   });
 
-  List<Expense> get _categoryExpenses {
-    return expenses.where((e) => e.category == category).toList();
-  }
+  List<Expense> get _categoryExpenses =>
+      expenses.where((e) => e.category == category).toList();
 
-  double get _total {
-    return _categoryExpenses.fold(0.0, (sum, e) => sum + e.amount);
-  }
+  double get _total => _categoryExpenses.fold(0.0, (sum, e) => sum + e.amount);
 
   @override
   Widget build(BuildContext context) {
@@ -30,37 +27,47 @@ class CategoryDetailsScreen extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 16),
-
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
             color: category.color.withValues(alpha: 0.1),
             child: Column(
               children: [
-                Icon(category.icon, size: 48),
+                Icon(category.icon, size: 48, color: category.color),
+                const SizedBox(height: 8),
                 Text(
-                  'Total: \$${_total.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  'Total: ₴${_total.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text('${_categoryExpenses.length} transactions'),
               ],
             ),
           ),
-
           const SizedBox(height: 16),
-
           Expanded(
-            child: ListView.builder(
-              itemCount: _categoryExpenses.length,
-              itemBuilder: (context, index) {
-                final expense = _categoryExpenses[index];
-                return ListTile(
-                  title: Text(expense.title),
-                  subtitle: Text(expense.formattedDate),
-                  trailing: Text(expense.formattedAmount),
-                );
-              },
-            ),
+            child: _categoryExpenses.isEmpty
+                ? const Center(child: Text('No expenses in this category'))
+                : ListView.builder(
+                    itemCount: _categoryExpenses.length,
+                    itemBuilder: (context, index) {
+                      final expense = _categoryExpenses[index];
+                      return ListTile(
+                        leading: Icon(
+                          expense.category.icon,
+                          color: expense.category.color,
+                        ),
+                        title: Text(expense.title),
+                        subtitle: Text(expense.formattedDate),
+                        trailing: Text(
+                          expense.formattedAmount,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

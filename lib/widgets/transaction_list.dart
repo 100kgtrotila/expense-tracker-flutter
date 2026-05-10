@@ -15,19 +15,16 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (expenses.isEmpty) {
-      return const Center(child: Text('No transactions yet!'));
+      return _buildEmptyState();
     }
 
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         final expense = expenses[index];
-
         return Dismissible(
           key: ValueKey(expense.id),
-
           direction: DismissDirection.endToStart,
-
           background: Container(
             color: Colors.red,
             alignment: Alignment.centerRight,
@@ -35,11 +32,7 @@ class TransactionList extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: const Icon(Icons.delete, color: Colors.white, size: 30),
           ),
-
-          onDismissed: (direction) {
-            onDelete(expense.id);
-          },
-
+          onDismissed: (direction) => onDelete(expense.id),
           child: Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: ListTile(
@@ -66,6 +59,31 @@ class TransactionList extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.receipt_long, size: 80, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(
+            'No transactions yet!',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Tap + to add your first expense',
+            style: TextStyle(color: Colors.grey[500]),
+          ),
+        ],
+      ),
     );
   }
 }

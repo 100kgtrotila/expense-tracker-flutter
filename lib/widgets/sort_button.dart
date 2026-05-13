@@ -57,7 +57,6 @@ class SortButton extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return PopupMenuItem(
-      value: type,
       child: Row(
         children: [
           Icon(icon, size: 18, color: isActive ? primaryColor : null),

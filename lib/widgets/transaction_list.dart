@@ -5,11 +5,13 @@ import '../models/expense.dart';
 class TransactionList extends StatelessWidget {
   final List<Expense> expenses;
   final Function(int id) onDelete;
+  final bool shrinkWrap;
 
   const TransactionList({
     super.key,
     required this.expenses,
     required this.onDelete,
+    this.shrinkWrap = false,
   });
 
   @override
@@ -19,6 +21,8 @@ class TransactionList extends StatelessWidget {
     }
 
     return ListView.builder(
+      shrinkWrap: shrinkWrap,
+      physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         final expense = expenses[index];
